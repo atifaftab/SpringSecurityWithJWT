@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +24,18 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long JWT_EXPIRATION;
 
-    private final SecretKey secretKey;
+    private SecretKey secretKey;
 
-    public JwtUtil() {
-        // Create the SecretKey (HMAC SHA-256)
+    @PostConstruct
+    public void init() {
+        // Initialize the SecretKey after injection
         this.secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
+
+//    public JwtUtil() {
+//        // Create the SecretKey (HMAC SHA-256)
+//        this.secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+//    }
 
     // Generate JWT token
     public String generateToken(String username) {
